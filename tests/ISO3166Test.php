@@ -41,8 +41,7 @@ class ISO3166Test extends \PHPUnit_Framework_TestCase
      */
     public function testGetByAlpha2Invalid($alpha2, $expectedException, $exceptionPattern)
     {
-        $this->expectException($expectedException);
-        $this->expectExceptionMessageRegExp($exceptionPattern);
+        $this->setExpectedExceptionRegExp($expectedException, $exceptionPattern);
 
         $this->iso3166->getByAlpha2($alpha2);
     }
@@ -78,8 +77,7 @@ class ISO3166Test extends \PHPUnit_Framework_TestCase
      */
      public function testGetByAlpha3Invalid($alpha3, $expectedException, $exceptionPattern)
      {
-         $this->expectException($expectedException);
-         $this->expectExceptionMessageRegExp($exceptionPattern);
+         $this->setExpectedExceptionRegExp($expectedException, $exceptionPattern);
 
          $this->iso3166->getByAlpha3($alpha3);
      }
@@ -115,8 +113,7 @@ class ISO3166Test extends \PHPUnit_Framework_TestCase
      */
     public function testGetByNumericInvalid($numeric, $expectedException, $exceptionPattern)
     {
-        $this->expectException($expectedException);
-        $this->expectExceptionMessageRegExp($exceptionPattern);
+        $this->setExpectedExceptionRegExp($expectedException, $exceptionPattern);
 
         $this->iso3166->getByNumeric($numeric);
     }
