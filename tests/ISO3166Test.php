@@ -11,118 +11,141 @@ namespace League\ISO3166;
 
 class ISO3166Test extends \PHPUnit_Framework_TestCase
 {
+    /** @var array */
+    public $foo = [
+        ISO3166::KEY_ALPHA2 => 'FO',
+        ISO3166::KEY_ALPHA3 => 'FOO',
+        ISO3166::KEY_NUMERIC => '001',
+    ];
+
+    /** @var array */
+    public $bar = [
+        ISO3166::KEY_ALPHA2 => 'BA',
+        ISO3166::KEY_ALPHA3 => 'BAR',
+        ISO3166::KEY_NUMERIC => '002',
+    ];
+
+    /** @var ISO3166 */
+    public $iso3166;
+
+    public function setUp()
+    {
+        $this->iso3166 = new ISO3166([$this->foo, $this->bar]);
+    }
+
     /**
-     * @testdox Calling getByAlpha2 with an invalid alpha2 throws a DomainException.
+     * @testdox Calling getByAlpha2 with bad input throws various exceptions.
      * @dataProvider invalidAlpha2Provider
-     * @expectedException \DomainException
-     * @expectedExceptionMessageRegExp /^Not a valid alpha2: .*$/
      *
      * @param string $alpha2
      */
-    public function testGetByAlpha2Invalid($alpha2)
+    public function testGetByAlpha2Invalid($alpha2, $expectedException, $exceptionPattern)
     {
-        $iso3166 = new ISO3166();
-        $iso3166->getByAlpha2($alpha2);
+        $this->expectException($expectedException);
+        $this->expectExceptionMessageRegExp($exceptionPattern);
+
+        $this->iso3166->getByAlpha2($alpha2);
     }
 
     /**
-     * @testdox Calling getByAlpha2 with an unknown alpha2 throws a OutOfBoundsException.
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage ISO 3166-1 does not contain: ZZ
+     * @return array
      */
-    public function testGetByAlpha2Unknown()
+    public function invalidAlpha2Provider()
     {
-        $iso3166 = new ISO3166();
-        $iso3166->getByAlpha2('ZZ');
+        return [
+            ['Z', \DomainException::class, '/^Not a valid alpha2: .*$/'],
+            ['ZZZ', \DomainException::class, '/^Not a valid alpha2: .*$/'],
+            [1, \DomainException::class, '/^Expected \$alpha2 to be of type string, got: .*$/'],
+            [123, \DomainException::class, '/^Expected \$alpha2 to be of type string, got: .*$/'],
+            ['ZZ', \OutOfBoundsException::class, '/^ISO 3166-1 does not contain: .*$/'],
+        ];
     }
 
     /**
-     * @testdox Calling getByAlpha2 with a known alpha2 returns an associative array with the data.
-     * @dataProvider alpha2Provider
-     *
-     * @param string $alpha2
-     * @param array $expected
+     * @testdox Calling getByAlpha2 with a known alpha2 returns matching data array.
      */
-    public function testGetByAlpha2($alpha2, array $expected)
+    public function testGetByAlpha2()
     {
-        $iso3166 = new ISO3166();
-        $this->assertEquals($expected, $iso3166->getByAlpha2($alpha2));
+        $this->assertEquals($this->foo, $this->iso3166->getByAlpha2($this->foo[ISO3166::KEY_ALPHA2]));
+        $this->assertEquals($this->bar, $this->iso3166->getByAlpha2($this->bar[ISO3166::KEY_ALPHA2]));
     }
 
     /**
-     * @testdox Calling getByAlpha3 with an invalid alpha3 throws a DomainException.
+     * @testdox Calling getByAlpha3 with bad input throws various exceptions.
      * @dataProvider invalidAlpha3Provider
-     * @expectedException \DomainException
-     * @expectedExceptionMessageRegExp /^Not a valid alpha3: .*$/
      *
      * @param string $alpha3
      */
-    public function testGetByAlpha3Invalid($alpha3)
-    {
-        $iso3166 = new ISO3166();
-        $iso3166->getByAlpha3($alpha3);
-    }
+     public function testGetByAlpha3Invalid($alpha3, $expectedException, $exceptionPattern)
+     {
+         $this->expectException($expectedException);
+         $this->expectExceptionMessageRegExp($exceptionPattern);
+
+         $this->iso3166->getByAlpha3($alpha3);
+     }
 
     /**
-     * @testdox Calling getByAlpha3 with an unknown alpha3 throws a OutOfBoundsException.
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage ISO 3166-1 does not contain: ZZZ
+     * @return array
      */
-    public function testGetByAlpha3Unknown()
+    public function invalidAlpha3Provider()
     {
-        $iso3166 = new ISO3166();
-        $iso3166->getByAlpha3('ZZZ');
+        return [
+            ['ZZ', \DomainException::class, '/^Not a valid alpha3: .*$/'],
+            ['ZZZZ', \DomainException::class, '/^Not a valid alpha3: .*$/'],
+            [12, \DomainException::class, '/^Expected \$alpha3 to be of type string, got: .*$/'],
+            [1234, \DomainException::class, '/^Expected \$alpha3 to be of type string, got: .*$/'],
+            ['ZZZ', \OutOfBoundsException::class, '/^ISO 3166-1 does not contain: .*$/'],
+        ];
     }
 
     /**
-     * @testdox Calling getByAlpha3 with a known alpha3 returns an associative array with the data.
-     * @dataProvider alpha3Provider
-     *
-     * @param string $alpha3
-     * @param array $expected
+     * @testdox Calling getByAlpha3 with a known alpha3 returns matching data array.
      */
-    public function testGetByAlpha3($alpha3, array $expected)
+    public function testGetByAlpha3()
     {
-        $iso3166 = new ISO3166();
-        $this->assertEquals($expected, $iso3166->getByAlpha3($alpha3));
+        $this->assertEquals($this->foo, $this->iso3166->getByAlpha3($this->foo[ISO3166::KEY_ALPHA3]));
+        $this->assertEquals($this->bar, $this->iso3166->getByAlpha3($this->bar[ISO3166::KEY_ALPHA3]));
     }
 
     /**
-     * @testdox Calling getByNumeric with an invalid numeric throws a DomainException.
+     * @testdox Calling getByNumeric with bad input throws various exceptions.
      * @dataProvider invalidNumericProvider
-     * @expectedException \DomainException
-     * @expectedExceptionMessageRegExp /^Not a valid numeric: .*$/
      *
      * @param string $numeric
      */
-    public function testGetByNumericInvalid($numeric)
+    public function testGetByNumericInvalid($numeric, $expectedException, $exceptionPattern)
     {
-        $iso3166 = new ISO3166();
-        $iso3166->getByNumeric($numeric);
+        $this->expectException($expectedException);
+        $this->expectExceptionMessageRegExp($exceptionPattern);
+
+        $this->iso3166->getByNumeric($numeric);
     }
 
     /**
-     * @testdox Calling getByNumeric with an unknown numeric throws a OutOfBoundsException.
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage ISO 3166-1 does not contain: 000
+     * @return array
      */
-    public function testGetByNumericUnknown()
+    public function invalidNumericProvider()
     {
-        $iso3166 = new ISO3166();
-        $iso3166->getByNumeric('000');
+        return [
+            ['00', \DomainException::class, '/^Not a valid numeric: .*$/'],
+            ['0000', \DomainException::class, '/^Not a valid numeric: .*$/'],
+            ['ZZ', \DomainException::class, '/^Not a valid numeric: .*$/'],
+            ['ZZZ', \DomainException::class, '/^Not a valid numeric: .*$/'],
+            ['ZZZZ', \DomainException::class, '/^Not a valid numeric: .*$/'],
+            [1, \DomainException::class, '/^Expected \$numeric to be of type string, got: .*$/'],
+            [12, \DomainException::class, '/^Expected \$numeric to be of type string, got: .*$/'],
+            [123, \DomainException::class, '/^Expected \$numeric to be of type string, got: .*$/'],
+            ['000', \OutOfBoundsException::class, '/^ISO 3166-1 does not contain: .*$/'],
+        ];
     }
 
     /**
-     * @testdox Calling getByNumeric with a known numeric returns an associative array with the data.
-     * @dataProvider numericProvider
-     *
-     * @param string $numeric
-     * @param array $expected
+     * @testdox Calling getByNumeric with a known numeric returns matching data array.
      */
-    public function testGetByNumeric($numeric, $expected)
+    public function testGetByNumeric()
     {
-        $iso3166 = new ISO3166();
-        $this->assertEquals($expected, $iso3166->getByNumeric($numeric));
+        $this->assertEquals($this->foo, $this->iso3166->getByNumeric($this->foo[ISO3166::KEY_NUMERIC]));
+        $this->assertEquals($this->bar, $this->iso3166->getByNumeric($this->bar[ISO3166::KEY_NUMERIC]));
     }
 
     /**
@@ -130,9 +153,7 @@ class ISO3166Test extends \PHPUnit_Framework_TestCase
      */
     public function testGetAll()
     {
-        $iso3166 = new ISO3166();
-        $this->assertInternalType('array', $iso3166->getAll());
-        $this->assertCount(249, $iso3166->getAll());
+        $this->assertInternalType('array', $this->iso3166->getAll(), 'getAll() should return an array.');
     }
 
     /**
@@ -140,14 +161,12 @@ class ISO3166Test extends \PHPUnit_Framework_TestCase
      */
     public function testIterator()
     {
-        $iso3166 = new ISO3166();
-
         $i = 0;
-        foreach ($iso3166 as $key => $value) {
+        foreach ($this->iso3166 as $key => $value) {
             ++$i;
         }
 
-        $this->assertEquals(count($iso3166->getAll()), $i, 'Compare iterated count to count(getAll()).');
+        $this->assertEquals(count($this->iso3166->getAll()), $i, 'Compare iterated count to count(getAll()).');
     }
 
     /**
@@ -155,10 +174,8 @@ class ISO3166Test extends \PHPUnit_Framework_TestCase
      */
     public function testListBy()
     {
-        $iso3166 = new ISO3166();
-
         try {
-            foreach ($iso3166->listBy('foo') as $key => $value) {
+            foreach ($this->iso3166->listBy('foo') as $key => $value) {
                 // void
             }
         } catch (\Exception $e) {
@@ -169,81 +186,10 @@ class ISO3166Test extends \PHPUnit_Framework_TestCase
         }
 
         $i = 0;
-        foreach ($iso3166->listBy(ISO3166::KEY_ALPHA3) as $key => $value) {
+        foreach ($this->iso3166->listBy(ISO3166::KEY_ALPHA3) as $key => $value) {
             ++$i;
         }
 
-        $this->assertEquals(count($iso3166->getAll()), $i, 'Compare iterated count to count(getAll()).');
-    }
-
-    /**
-     * @return array
-     */
-    public function invalidAlpha2Provider()
-    {
-        return [['Z'], ['ZZZ'], [1], [123]];
-    }
-
-    /**
-     * @return array
-     */
-    public function alpha2Provider()
-    {
-        return $this->getCountries('alpha2');
-    }
-
-    /**
-     * @return array
-     */
-    public function invalidAlpha3Provider()
-    {
-        return [['ZZ'], ['ZZZZ'], [12], [1234]];
-    }
-
-    /**
-     * @return array
-     */
-    public function alpha3Provider()
-    {
-        return $this->getCountries('alpha3');
-    }
-
-    /**
-     * @return array
-     */
-    public function invalidNumericProvider()
-    {
-        return [['00'], ['0000'], ['ZZ'], ['ZZZZ']];
-    }
-
-    /**
-     * @return array
-     */
-    public function numericProvider()
-    {
-        return $this->getCountries('numeric');
-    }
-
-    /**
-     * @param string $indexedBy
-     *
-     * @return array
-     */
-    private function getCountries($indexedBy)
-    {
-        $reflected = new \ReflectionClass('League\ISO3166\ISO3166');
-        $countries = $reflected->getProperty('countries');
-        $countries->setAccessible(true);
-        $countries = $countries->getValue(new ISO3166());
-
-        return array_reduce(
-            $countries,
-            function (array $carry, array $country) use ($indexedBy) {
-                $carry[] = [$country[$indexedBy], $country];
-
-                return $carry;
-            },
-            []
-        );
+        $this->assertEquals(count($this->iso3166), $i, 'Compare iterated count to count($iso3166).');
     }
 }
