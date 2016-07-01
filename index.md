@@ -6,10 +6,10 @@ title: Introduction
 
 # Introduction
 
-[![Author](http://img.shields.io/badge/author-@phpalcohol-blue.svg?style=flat-square)](https://twitter.com/phpalcohol)
-[![Source Code](http://img.shields.io/badge/source-thephpleague/iso3166-blue.svg?style=flat-square)](https://github.com/thephpleague/iso3166)
-[![License](https://img.shields.io/packagist/l/league/iso3166.svg?style=flat-square)](https://packagist.org/packages/league/iso3166)
-[![Build Status](https://img.shields.io/travis/thephpleague/iso3166/master.svg?style=flat-square)](https://travis-ci.org/thephpleague/iso3166)
+[![Author](//img.shields.io/badge/author-@phpalcohol-blue.svg?style=flat-square)](https://twitter.com/phpalcohol)
+[![Source Code](//img.shields.io/badge/source-thephpleague/iso3166-blue.svg?style=flat-square)](https://github.com/thephpleague/iso3166)
+[![License](//img.shields.io/packagist/l/league/iso3166.svg?style=flat-square)](https://packagist.org/packages/league/iso3166)
+[![Build Status](//img.shields.io/travis/thephpleague/iso3166/master.svg?style=flat-square)](https://travis-ci.org/thephpleague/iso3166)
 
 ## What is ISO 3166-1?
 
@@ -19,4 +19,4 @@ ISO 3166-1 is part of the ISO 3166 standard published by the International Organ
 * ISO 3166-1 alpha-3 – three-letter country codes which allow a better visual association between the codes and the country names than the alpha-2 codes.
 * ISO 3166-1 numeric – three-digit country codes which are identical to those developed and maintained by the United Nations Statistics Division, with the advantage of script (writing system) independence, and hence useful for people or systems using non-Latin scripts.
 
-*-- [Wikipedia](http://en.wikipedia.org/wiki/ISO_3166-1)*
+*-- [Wikipedia](https://en.wikipedia.org/wiki/ISO_3166-1)*
